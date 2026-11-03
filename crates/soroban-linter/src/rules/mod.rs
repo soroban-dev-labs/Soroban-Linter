@@ -11,6 +11,7 @@ use crate::manifest::ManifestSet;
 use crate::LintConfig;
 
 mod critical_state_in_temporary;
+mod missing_admin_event;
 mod missing_require_auth;
 mod missing_ttl_extension;
 mod overflow_checks;
@@ -57,6 +58,7 @@ pub fn all_rules() -> Vec<&'static dyn Rule> {
         &unchecked_auth_address::UncheckedAuthAddress,
         &overflow_checks::OverflowChecks,
         &unvalidated_amount::UnvalidatedAmount,
+        &missing_admin_event::MissingAdminEvent,
     ]
 }
 

@@ -615,6 +615,7 @@ pub struct FnFacts {
     pub callees: Vec<String>,
     pub requires_auth: bool,
     pub upgrades: bool,
+    pub publishes_event: bool,
     pub verifies_signature: bool,
     /// Receivers of `require_auth*` calls that are plain variables (`caller.require_auth()`).
     pub auth_targets: Vec<(String, (usize, usize))>,
@@ -700,6 +701,7 @@ impl<'ast> Visit<'ast> for Scanner {
     fn visit_expr_method_call(&mut self, m: &'ast ExprMethodCall) {
         let name = m.method.to_string();
         match name.as_str() {
+            "publish" => self.facts.publishes_event = true,
             "require_auth" | "require_auth_for_args" => {
                 self.facts.requires_auth = true;
                 match single_ident(&m.receiver) {
@@ -828,6 +830,7 @@ pub struct Effects {
     /// Extends the TTL of persistent or temporary entries.
     pub extends_entry_ttl: bool,
     pub upgrades: bool,
+    pub publishes_event: bool,
     pub verifies_signature: bool,
     pub delegates_auth: bool,
     /// Writes a key such as `DataKey::Admin` / `Owner`.
@@ -856,6 +859,7 @@ impl Effects {
                 .filter(entry)
                 .any(|c| c.op == StorageOp::ExtendTtl),
             upgrades: f.upgrades,
+            publishes_event: f.publishes_event,
             verifies_signature: f.verifies_signature,
             delegates_auth: f.delegates_auth,
             writes_authority_key: f
@@ -886,6 +890,7 @@ impl Effects {
         self.writes_entry_storage |= o.writes_entry_storage;
         self.extends_entry_ttl |= o.extends_entry_ttl;
         self.upgrades |= o.upgrades;
+        self.publishes_event |= o.publishes_event;
         self.verifies_signature |= o.verifies_signature;
         self.delegates_auth |= o.delegates_auth;
         self.writes_authority_key |= o.writes_authority_key;

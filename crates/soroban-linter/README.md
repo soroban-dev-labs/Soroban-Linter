@@ -63,6 +63,7 @@ Exit codes: `0` means clean, `1` means there are findings at or above `--fail-on
 | SG008 | `unchecked-auth-address` | error | It covers two cases:<br>• `caller.require_auth()` where `caller` is a parameter that is never used otherwise (e.g. never compared with the stored admin);<br>• a function that overwrites an admin/owner key while authorizing only caller-supplied addresses (`set_admin(new) { new.require_auth(); .. }`).<br>Either way, anyone can pass their own address and pass the check. |
 | SG009 | `overflow-checks-disabled` | error | A contract crate (`soroban-sdk` + `cdylib`) whose governing release profile, i.e. the workspace root's, lacks `overflow-checks = true`. Without it, `i128` arithmetic wraps silently. |
 | SG010 | `unvalidated-amount` | warning | A signed amount parameter (`i128`/`i64`/`i32`) used in a state-changing entry point but never range-checked: no comparison, `assert!`, or `check_*`/`require_*` helper. This includes helpers the value is forwarded to. A negative amount turns a debit into a credit. |
+| SG011 | `missing-admin-event` | warning | A contract entry point writes an admin/owner-style key or upgrades the contract without publishing an event directly or through a helper. |
 
 ## Configuration file
 

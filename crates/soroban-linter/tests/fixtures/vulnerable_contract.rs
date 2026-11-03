@@ -62,7 +62,7 @@ pub struct Vault;
 #[contractimpl]
 impl Vault {
     /// Anyone can call this first and become admin (front-running).
-    pub fn initialize(e: Env, admin: Address) { // expect: SG001
+    pub fn initialize(e: Env, admin: Address) { // expect: SG001, SG011
         if e.storage().instance().has(&DataKey::Admin) {
             panic!("already initialized");
         }
@@ -76,17 +76,17 @@ impl Vault {
     }
 
     /// Anyone can make themselves admin.
-    pub fn set_admin(e: Env, new_admin: Address) { // expect: SG001
+    pub fn set_admin(e: Env, new_admin: Address) { // expect: SG001, SG011
         e.storage().instance().set(&DataKey::Admin, &new_admin);
     }
 
     /// Anyone can replace the contract code.
-    pub fn upgrade(e: Env, new_wasm_hash: BytesN<32>) { // expect: SG001
+    pub fn upgrade(e: Env, new_wasm_hash: BytesN<32>) { // expect: SG001, SG011
         e.deployer().update_current_contract_wasm(new_wasm_hash);
     }
 
     /// Owner kept in temporary storage, and no TTL extension anywhere.
-    pub fn set_owner(e: Env, owner: Address) { // expect: SG005, SG008
+    pub fn set_owner(e: Env, owner: Address) { // expect: SG005, SG008, SG011
         owner.require_auth();
         let key = DataKey::Owner;
         e.storage().temporary().set(&key, &owner); // expect: SG002
@@ -170,7 +170,7 @@ impl Vault {
     }
 
     /// Newer SDK upgrade API, still without auth.
-    pub fn upgrade_v2(e: Env, hash: BytesN<32>) { // expect: SG001
+    pub fn upgrade_v2(e: Env, hash: BytesN<32>) { // expect: SG001, SG011
         e.deployer()
             .update_current_contract(ContractExecutable::Wasm(hash));
     }

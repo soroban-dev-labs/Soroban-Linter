@@ -141,7 +141,7 @@ fn baseline_hides_known_findings_only() {
     let (code, out) = run(&[copy.to_str().unwrap(), "--baseline", base_s]);
     assert_eq!(code, 1);
     assert!(out.contains("set_owner2"), "{out}");
-    assert!(out.contains("1 error(s), 0 warning(s), 0 note(s)"), "{out}");
+    assert!(out.contains("1 error(s), 1 warning(s), 0 note(s)"), "{out}");
 
     std::fs::remove_dir_all(&dir).unwrap();
 }

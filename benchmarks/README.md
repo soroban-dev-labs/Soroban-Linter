@@ -31,13 +31,13 @@ Not every mutant introduces a bug. Some removals don't change behavior ("equival
 
 ### Findings
 
-| Repository | Files | Errors | Warnings | Notes |
-|---|---|---|---|---|
-| soroban-examples | 131 | 0 | 22 | 39 |
-| blend-contracts | 88 | 0 | 18 | 15 |
-| soroswap-core | 45 | 2 | 8 | 10 |
-| soroban-governor | 33 | 0 | 4 | 2 |
-| oz-stellar-contracts | 323 | 1 | 62 | 42 |
+| Repository | Files | Errors | Warnings | SG011 warnings | Notes |
+|---|---|---|---|---|---|
+| soroban-examples | 131 | 0 | 39 | 17 | 39 |
+| blend-contracts | 88 | 0 | 19 | 1 | 15 |
+| soroswap-core | 45 | 2 | 10 | 2 | 10 |
+| soroban-governor | 33 | 0 | 5 | 1 | 2 |
+| oz-stellar-contracts | 323 | 1 | 85 | 23 | 42 |
 
 The 3 errors, checked by hand:
 
