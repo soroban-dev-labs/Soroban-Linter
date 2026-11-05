@@ -1,5 +1,9 @@
 # Soroban-Linter (soroban-guard)
 
+[![CI](https://github.com/soroban-dev-labs/Soroban-Linter/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/soroban-dev-labs/Soroban-Linter/actions/workflows/ci.yml)
+[![License: MIT OR Apache-2.0](https://img.shields.io/badge/license-MIT%20OR%20Apache--2.0-blue.svg)](#license)
+[![Rules: 11](https://img.shields.io/badge/rules-11-informational.svg)](crates/soroban-linter/README.md#rules)
+
 Safety tooling for [Soroban](https://developers.stellar.org/docs/build/smart-contracts/overview) smart contracts on Stellar.
 
 ```
