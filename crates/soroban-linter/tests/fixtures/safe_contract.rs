@@ -18,6 +18,9 @@ const MAX_BATCH: u32 = 25;
 pub enum Error {
     NotInitialized = 1,
     BadSignature = 2,
+    InvalidAmount = 3,
+    NotAdmin = 4,
+    InsufficientAllowance = 5,
 }
 
 #[contracttype]
@@ -28,9 +31,9 @@ pub enum DataKey {
     Allowance(Address, Address),
 }
 
-fn check_nonnegative_amount(amount: i128) {
+fn check_nonnegative_amount(e: &Env, amount: i128) {
     if amount < 0 {
-        panic!("negative amount is not allowed: {}", amount)
+        panic_with_error!(e, Error::InvalidAmount)
     }
 }
 
@@ -58,7 +61,7 @@ fn write_balance(e: &Env, id: &Address, amount: i128) {
 
 fn spend(e: &Env, id: &Address, value: i128) {
     if value <= 0 {
-        panic!("value must be positive");
+        panic_with_error!(e, Error::InvalidAmount);
     }
     let b = read_balance(e, id);
     write_balance(e, id, b - value);
@@ -74,7 +77,7 @@ impl Token {
     }
 
     pub fn mint(e: Env, to: Address, amount: i128) {
-        check_nonnegative_amount(amount);
+        check_nonnegative_amount(&e, amount);
         read_admin(&e).require_auth();
         e.storage().instance().extend_ttl(BALANCE_THRESHOLD, BALANCE_BUMP);
         let b = read_balance(&e, &to);
@@ -83,7 +86,7 @@ impl Token {
 
     pub fn transfer(e: Env, from: Address, to: Address, amount: i128) {
         from.require_auth();
-        check_nonnegative_amount(amount);
+        check_nonnegative_amount(&e, amount);
         let fb = read_balance(&e, &from);
         let tb = read_balance(&e, &to);
         write_balance(&e, &from, fb - amount);
@@ -115,7 +118,7 @@ impl Token {
     /// Caller-supplied address, but checked against the stored admin.
     pub fn set_admin(e: Env, caller: Address, new_admin: Address) {
         if caller != read_admin(&e) {
-            panic!("not admin");
+            panic_with_error!(&e, Error::NotAdmin);
         }
         caller.require_auth();
         e.storage().instance().set(&DataKey::Admin, &new_admin);
@@ -130,11 +133,11 @@ impl Token {
     /// Spender signs and `from` is debited, but through an allowance.
     pub fn transfer_from(e: Env, spender: Address, from: Address, to: Address, amount: i128) {
         spender.require_auth();
-        check_nonnegative_amount(amount);
+        check_nonnegative_amount(&e, amount);
         let key = DataKey::Allowance(from.clone(), spender);
         let allowance: i128 = e.storage().temporary().get(&key).unwrap_or(0);
         if allowance < amount {
-            panic!("insufficient allowance");
+            panic_with_error!(&e, Error::InsufficientAllowance);
         }
         e.storage().temporary().set(&key, &(allowance - amount));
         e.storage().temporary().extend_ttl(&key, 100, 100);
@@ -146,7 +149,7 @@ impl Token {
     /// Credits `to` without its signature: fine, nothing is taken from it.
     pub fn reward(e: Env, to: Address, amount: i128) {
         read_admin(&e).require_auth();
-        check_nonnegative_amount(amount);
+        check_nonnegative_amount(&e, amount);
         let b = read_balance(&e, &to);
         write_balance(&e, &to, b + amount);
     }

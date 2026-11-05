@@ -55,11 +55,11 @@ impl Base {
 /// Default methods of a `#[contracttrait]` are contract entry points.
 #[contracttrait]
 pub trait Token {
-    fn transfer(e: &Env, from: Address, to: Address, amount: i128) {
+    fn transfer(e: &Env, from: Address, to: Address, amount: i128) { // expect: SG014
         Base::transfer(e, &from, &to, amount);
     }
 
-    fn burn(e: &Env, from: Address, amount: i128) { // expect: SG001
+    fn burn(e: &Env, from: Address, amount: i128) { // expect: SG001, SG014
         Base::burn(e, &from, amount);
     }
 }

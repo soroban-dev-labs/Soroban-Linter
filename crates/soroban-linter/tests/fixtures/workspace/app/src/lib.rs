@@ -14,7 +14,7 @@ pub struct App;
 #[contractimpl]
 impl App {
     /// `a::on_hook` debits `token`, which never signs.
-    pub fn hook_a(e: Env, token: Address, amount: i128) { // expect: SG001
+    pub fn hook_a(e: Env, token: Address, amount: i128) { // expect: SG001, SG014
         a::on_hook(&e, &token, amount);
     }
 
@@ -24,7 +24,7 @@ impl App {
     }
 
     /// Calls a library function with its own name.
-    pub fn transfer(e: Env, from: Address, to: Address, amount: i128) {
+    pub fn transfer(e: Env, from: Address, to: Address, amount: i128) { // expect: SG014
         Base::transfer(&e, &from, &to, amount);
     }
 

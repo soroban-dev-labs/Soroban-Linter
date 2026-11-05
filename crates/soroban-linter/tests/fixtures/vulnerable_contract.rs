@@ -62,7 +62,7 @@ pub struct Vault;
 #[contractimpl]
 impl Vault {
     /// Anyone can call this first and become admin (front-running).
-    pub fn initialize(e: Env, admin: Address) { // expect: SG001
+    pub fn initialize(e: Env, admin: Address) { // expect: SG001, SG014
         if e.storage().instance().has(&DataKey::Admin) {
             panic!("already initialized");
         }
@@ -157,16 +157,24 @@ impl Vault {
     }
 
     /// Debits `from`, but only the (caller-chosen) `spender` signs.
-    pub fn pull(e: Env, spender: Address, from: Address, amount: i128) { // expect: SG001
+    pub fn pull(e: Env, spender: Address, from: Address, amount: i128) { // expect: SG001, SG014
         spender.require_auth(); // expect: SG008
         check_amount(amount);
         spend_balance(&e, &from, amount);
     }
 
     /// Loads the admin, then forgets to authorize it.
-    pub fn set_fee(e: Env, fee: u32) { // expect: SG001
+    pub fn set_fee(e: Env, fee: u32) { // expect: SG001, SG014
         let _admin: Address = e.storage().instance().get(&DataKey::Admin).unwrap_or_else(|| panic!()); 
         e.storage().instance().set(&DataKey::Counter, &fee);
+    }
+
+    pub fn unwrap_non_storage(value: Option<u32>) -> u32 { // expect: SG014
+        value.unwrap()
+    }
+
+    pub fn unreachable_entry() { // expect: SG014
+        unreachable!();
     }
 
     /// Newer SDK upgrade API, still without auth.
@@ -223,5 +231,6 @@ mod test {
 
     fn seed(e: &Env, id: &Address) {
         e.storage().temporary().set(&DataKey::Balance(id.clone()), &100i128);
+        panic!("test-only");
     }
 }

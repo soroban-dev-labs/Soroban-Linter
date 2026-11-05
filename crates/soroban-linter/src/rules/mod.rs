@@ -14,6 +14,7 @@ mod critical_state_in_temporary;
 mod missing_require_auth;
 mod missing_ttl_extension;
 mod overflow_checks;
+mod panic_without_contract_error;
 mod storage_get_unwrap;
 mod unbounded_instance_storage;
 mod unbounded_storage_loop;
@@ -57,6 +58,7 @@ pub fn all_rules() -> Vec<&'static dyn Rule> {
         &unchecked_auth_address::UncheckedAuthAddress,
         &overflow_checks::OverflowChecks,
         &unvalidated_amount::UnvalidatedAmount,
+        &panic_without_contract_error::PanicWithoutContractError,
     ]
 }
 

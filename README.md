@@ -5,7 +5,7 @@ Safety tooling for [Soroban](https://developers.stellar.org/docs/build/smart-con
 ```
 soroban-guard/
 ├── crates/
-│   └── soroban-linter/          # Static analysis: 10 detectors for auth, storage lifecycle,
+│   └── soroban-linter/          # Static analysis: 11 detectors for auth, storage lifecycle,
 │                                # arithmetic and resource limits
 ├── benchmarks/                  # Reproducible benchmark on production contracts
 ├── action.yml                   # GitHub Action (lint + SARIF upload)
