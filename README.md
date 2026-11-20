@@ -34,7 +34,7 @@ error[SG008] unchecked-auth-address: `admin.require_auth()` authorizes an addres
 In GitHub Actions:
 
 ```yaml
-- uses: ArchBishop051/Soroban-Linter@main
+- uses: soroban-dev-labs/Soroban-Linter@main
   with:
     path: contracts/
 ```
